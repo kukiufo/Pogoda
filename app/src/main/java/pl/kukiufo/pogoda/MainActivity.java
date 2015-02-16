@@ -18,6 +18,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         pc = (PogodaComponent) findViewById(R.id.am_pogoda_component);
+
+        new PogodaTask(this, pc).execute();
     }
 
     @Override
@@ -31,6 +33,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
+            new PogodaTask(this, pc).execute();
             return true;
         }
 
