@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,4 +15,15 @@
         android:id="@+id/am_pogoda_component"
         layout="@layout/pogoda_component"
         android:layout_gravity="center" />
-</LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/am_im_refresh"
+        android:layout_gravity="right"
+        android:src="@mipmap/ic_refresh"
+        android:background="@drawable/refresh_style"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/am_pogoda_component"
+        android:layout_alignEnd="@+id/am_pogoda_component" />
+</RelativeLayout>
