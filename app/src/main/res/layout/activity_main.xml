@@ -9,12 +9,19 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <pl.kukiufo.pogoda.PogodaComponent
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/am_pogoda_component"
-        layout="@layout/pogoda_component"
-        android:layout_gravity="center" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView">
+
+        <pl.kukiufo.pogoda.PogodaComponent
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/am_pogoda_component"
+            layout="@layout/pogoda_component"
+            android:layout_gravity="top" />
+
+    </ScrollView>
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -24,6 +31,6 @@
         android:src="@mipmap/ic_refresh"
         android:background="@drawable/refresh_style"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/am_pogoda_component"
-        android:layout_alignEnd="@+id/am_pogoda_component" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

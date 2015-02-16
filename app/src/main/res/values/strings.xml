@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Pogoda</string>
 
-    <string name="txt">txt</string>
-    <string name="action_refresh">Odśwież</string>
+    <string name="no_data">b/d</string>
+    <string name="wind">wiatr:</string>
+    <string name="humidity">wilgotność:</string>
+    <string name="pressure">ciśnienie:</string>
+    <string name="visibility">widoczność:</string>
+    <string name="sunrise">wschód:</string>
+    <string name="sunset">zachód:</string>
+
 </resources>

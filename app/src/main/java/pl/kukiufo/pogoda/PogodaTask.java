@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +39,8 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
 
     Context context;
     String new_line;
-    String city, country, date, condition, humidity;
+    String location, date, condition, humidity, wind, pressure, visibility;
+    String sunrise, sunset;
     String temperature, temperature_min, temperature_max;
     PogodaComponent pogoda;
 
@@ -107,13 +112,15 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
             }
 
             if(dest != null) {
+                Node unitsNode = dest.getElementsByTagName("yweather:units").item(0);
+
                 Node locationNode = dest.getElementsByTagName("yweather:location").item(0);
-                city = locationNode.getAttributes().getNamedItem("city").getNodeValue();
-                country = locationNode.getAttributes().getNamedItem("country").getNodeValue();
+                location = locationNode.getAttributes().getNamedItem("city").getNodeValue();
+                location += ", " + locationNode.getAttributes().getNamedItem("country").getNodeValue();
 
                 Node temperatureNode = dest.getElementsByTagName("yweather:condition").item(0);
                 temperature = temperatureNode.getAttributes().getNamedItem("temp").getNodeValue() + "°";
-                //Node tempUnitNode = dest.getElementsByTagName("yweather:units").item(0);
+                //
                 //temperature += tempUnitNode.getAttributes().getNamedItem("temperature").getNodeValue();
 
                 Node dateNode = dest.getElementsByTagName("yweather:forecast").item(0);
@@ -124,8 +131,20 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
                 Node conditionNode = dest.getElementsByTagName("yweather:condition").item(0);
                 condition = conditionNode.getAttributes().getNamedItem("text").getNodeValue();
 
-                Node humidityNode = dest.getElementsByTagName("yweather:atmosphere").item(0);
-                humidity = humidityNode.getAttributes().getNamedItem("humidity").getNodeValue() + "%";
+                Node atmosphereNode = dest.getElementsByTagName("yweather:atmosphere").item(0);
+                humidity = atmosphereNode.getAttributes().getNamedItem("humidity").getNodeValue() + "%";
+
+                Node windNode = dest.getElementsByTagName("yweather:wind").item(0);
+                wind = windNode.getAttributes().getNamedItem("speed").getNodeValue() + " "  + unitsNode.getAttributes().getNamedItem("speed").getNodeValue();
+                wind += ", " + windNode.getAttributes().getNamedItem("direction").getNodeValue() + "°";
+
+                pressure = atmosphereNode.getAttributes().getNamedItem("pressure").getNodeValue()  + " hPa";
+
+                visibility = atmosphereNode.getAttributes().getNamedItem("visibility").getNodeValue()  + " " + unitsNode.getAttributes().getNamedItem("distance").getNodeValue();
+
+                Node astronomyNode = dest.getElementsByTagName("yweather:astronomy").item(0);
+                sunrise = astronomyNode.getAttributes().getNamedItem("sunrise").getNodeValue();
+                sunset = astronomyNode.getAttributes().getNamedItem("sunset").getNodeValue();
             }
         }
         return result;
@@ -133,18 +152,26 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        String txt = city + new_line;
-        txt += country + new_line;
-        txt += date + new_line;
-        txt += temperature + "(" + temperature_min + "," + temperature_max + ")" + new_line;
-        txt += condition + new_line;
-        txt += humidity + new_line;
+        try {
+            SimpleDateFormat dtParse = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+            SimpleDateFormat dtFormat = new SimpleDateFormat("dd MMMM yyyy");
+            Date dt = dtParse.parse(date);
+            date = dtFormat.format(dt);
+
+            dtParse = new SimpleDateFormat("hh:mm aa", Locale.US);
+            dtFormat = new SimpleDateFormat("H:mm");
+            dt = dtParse.parse(sunrise);
+            sunrise = dtFormat.format(dt);
+            dt = dtParse.parse(sunset);
+            sunset = dtFormat.format(dt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if(pogoda != null) {
             pogoda.setBussyVisible(View.INVISIBLE);
-            pogoda.setPogoda(city, country, date, temperature, temperature_min, temperature_max, condition, humidity);
+            pogoda.setPogoda(location, date, temperature, temperature_min, temperature_max,
+                            condition, humidity, wind, pressure, visibility, sunrise, sunset);
         }
-
-        Toast.makeText(context, txt, Toast.LENGTH_SHORT).show();
     }
 }
