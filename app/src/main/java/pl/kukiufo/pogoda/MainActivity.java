@@ -10,10 +10,14 @@ import android.view.MenuItem;
  */
 public class MainActivity extends ActionBarActivity {
 
+    private PogodaComponent pc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        pc = (PogodaComponent) findViewById(R.id.am_pogoda_component);
     }
 
     @Override

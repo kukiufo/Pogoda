@@ -1,0 +1,104 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pb_bussy"
+        android:layout_gravity="right" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:text="@string/txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_city"
+            android:layout_gravity="center"
+            android:textSize="25sp" />
+
+        <TextView
+            android:text="@string/txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_country"
+            android:textSize="20sp"
+            android:layout_below="@+id/tv_city"
+            android:layout_alignRight="@+id/tv_city"
+            android:layout_alignEnd="@+id/tv_city" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:text="@string/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_date"
+        android:layout_gravity="center"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:text="@string/txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_temperature"
+            android:textSize="75sp"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_temperature"
+            android:layout_toEndOf="@+id/tv_temperature">
+
+            <TextView
+                android:text="@string/txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_temperature_min"
+                android:textSize="20sp"
+                android:layout_gravity="right" />
+
+            <TextView
+                android:text="@string/txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_temperature_max"
+                android:textSize="20sp"
+                android:layout_gravity="right" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:text="@string/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_condition"
+        android:textSize="20sp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:text="@string/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_humidity"
+        android:textSize="20sp"
+        android:layout_gravity="center" />
+
+</LinearLayout>
