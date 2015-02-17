@@ -1,5 +1,6 @@
 package pl.kukiufo.pogoda;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
@@ -13,12 +14,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,24 +28,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 /**
  * Created by kukiufo on 16.02.15.
  */
 public class PogodaTask extends AsyncTask<Void, String, String> {
 
     Context context;
+    String city;
     String new_line;
     String location, date, condition, humidity, wind, pressure, visibility;
     String sunrise, sunset;
     String temperature, temperature_min, temperature_max;
     PogodaComponent pogoda;
 
-    public PogodaTask(Context context, PogodaComponent pogoda) {
+    public PogodaTask(Context context, PogodaComponent pogoda, String city) {
         this.context = context;
+        this.city = city;
         new_line = System.getProperty("line.separator");
         if(pogoda != null)
             this.pogoda = pogoda;
@@ -58,13 +56,15 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
 
     @Override
     protected String doInBackground(Void... arg0) {
-        String result = null;
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpContext httpContext = new BasicHttpContext();
-        HttpGet httpGet = new HttpGet("http://weather.yahooapis.com/forecastrss?w=12866469&u=c");
+        HttpClient httpClient1 = new DefaultHttpClient();
+        HttpContext httpContext1 = new BasicHttpContext();
+        //HttpGet httpGet1 = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city + "%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+        HttpGet httpGet1 = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city + "%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+        String jsonStr = null;
 
+        //https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22wejherowo%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys
         try {
-            HttpResponse response = httpClient.execute(httpGet, httpContext);
+            HttpResponse response = httpClient1.execute(httpGet1, httpContext1);
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {
@@ -76,81 +76,60 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
                 while ((stringReadLine = bufferedreader.readLine()) != null) {
                     stringBuilder.append(stringReadLine).append(new_line);
                 }
-                result = stringBuilder.toString();
-                System.out.println("result: " + result);
+                jsonStr = stringBuilder.toString();
+                System.out.println("jsonStr: " + jsonStr);
             }
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
             Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-            result = null;
+            jsonStr = null;
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-            result = null;
+            jsonStr = null;
         }
-
-        if(result != null && !result.isEmpty()) {
-            Document dest;
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder parser;
+        if(jsonStr != null) {
             try {
-                parser = dbFactory.newDocumentBuilder();
-                dest = parser.parse(new ByteArrayInputStream(result.getBytes()));
-            } catch (ParserConfigurationException e1) {
-                e1.printStackTrace();
-                Toast.makeText(context, e1.toString(), Toast.LENGTH_LONG).show();
-                dest = null;
-            } catch (SAXException e) {
+                JSONObject jsonObj = new JSONObject(jsonStr);
+                JSONObject jsonQuery = jsonObj.getJSONObject("query");
+                JSONObject jsonResults = jsonQuery.getJSONObject("results");
+                JSONObject jsonChannel = jsonResults.getJSONObject("channel");
+
+                JSONObject jsonLocation = jsonChannel.getJSONObject("location");
+                JSONObject jsonUnits = jsonChannel.getJSONObject("units");
+                JSONObject jsonWind = jsonChannel.getJSONObject("wind");
+                JSONObject jsonAtmosphere = jsonChannel.getJSONObject("atmosphere");
+                JSONObject jsonAstronomy = jsonChannel.getJSONObject("astronomy");
+                JSONObject jsonItem = jsonChannel.getJSONObject("item");
+                JSONObject jsonCondition = jsonItem.getJSONObject("condition");
+
+                JSONArray jsonForecasts = jsonItem.getJSONArray("forecast");
+                JSONObject jsonForecast = jsonForecasts.getJSONObject(0);
+
+                date = jsonForecast.get("date").toString();
+                location = jsonLocation.get("city").toString() + ", " + jsonLocation.get("country").toString();
+                condition = jsonCondition.get("text").toString();
+                temperature = jsonCondition.get("temp").toString() + "°";
+                temperature_min = jsonForecast.get("low").toString() + "°";
+                temperature_max = jsonForecast.get("high").toString() + "°";
+                wind = jsonWind.get("speed").toString() + " "  + jsonUnits.get("speed").toString() + ", " + jsonWind.get("direction").toString() + "°";
+                humidity = jsonAtmosphere.get("humidity").toString() + "%";
+                pressure = jsonAtmosphere.get("pressure").toString()  + " hPa";
+                visibility = jsonAtmosphere.get("visibility").toString()  + " " + jsonUnits.get("distance").toString();
+                sunrise = jsonAstronomy.get("sunrise").toString();
+                sunset = jsonAstronomy.get("sunset").toString();
+            } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-                dest = null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-                dest = null;
-            }
-
-            if(dest != null) {
-                Node unitsNode = dest.getElementsByTagName("yweather:units").item(0);
-
-                Node locationNode = dest.getElementsByTagName("yweather:location").item(0);
-                location = locationNode.getAttributes().getNamedItem("city").getNodeValue();
-                location += ", " + locationNode.getAttributes().getNamedItem("country").getNodeValue();
-
-                Node temperatureNode = dest.getElementsByTagName("yweather:condition").item(0);
-                temperature = temperatureNode.getAttributes().getNamedItem("temp").getNodeValue() + "°";
-                //
-                //temperature += tempUnitNode.getAttributes().getNamedItem("temperature").getNodeValue();
-
-                Node dateNode = dest.getElementsByTagName("yweather:forecast").item(0);
-                date = dateNode.getAttributes().getNamedItem("date").getNodeValue();
-                temperature_min = dateNode.getAttributes().getNamedItem("low").getNodeValue() + "°";
-                temperature_max = dateNode.getAttributes().getNamedItem("high").getNodeValue() + "°";
-
-                Node conditionNode = dest.getElementsByTagName("yweather:condition").item(0);
-                condition = conditionNode.getAttributes().getNamedItem("text").getNodeValue();
-
-                Node atmosphereNode = dest.getElementsByTagName("yweather:atmosphere").item(0);
-                humidity = atmosphereNode.getAttributes().getNamedItem("humidity").getNodeValue() + "%";
-
-                Node windNode = dest.getElementsByTagName("yweather:wind").item(0);
-                wind = windNode.getAttributes().getNamedItem("speed").getNodeValue() + " "  + unitsNode.getAttributes().getNamedItem("speed").getNodeValue();
-                wind += ", " + windNode.getAttributes().getNamedItem("direction").getNodeValue() + "°";
-
-                pressure = atmosphereNode.getAttributes().getNamedItem("pressure").getNodeValue()  + " hPa";
-
-                visibility = atmosphereNode.getAttributes().getNamedItem("visibility").getNodeValue()  + " " + unitsNode.getAttributes().getNamedItem("distance").getNodeValue();
-
-                Node astronomyNode = dest.getElementsByTagName("yweather:astronomy").item(0);
-                sunrise = astronomyNode.getAttributes().getNamedItem("sunrise").getNodeValue();
-                sunset = astronomyNode.getAttributes().getNamedItem("sunset").getNodeValue();
             }
         }
-        return result;
+
+        return jsonStr;
     }
 
     @Override
+    @SuppressLint("SimpleDateFormat")
     protected void onPostExecute(String result) {
         try {
             SimpleDateFormat dtParse = new SimpleDateFormat("dd MMM yyyy", Locale.US);
