@@ -27,12 +27,25 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/am_im_settings"
+        android:layout_gravity="right"
+        android:src="@mipmap/ic_settings"
+        android:background="@drawable/settings_style"
+        android:contentDescription="@string/content_settings"
+        android:layout_alignTop="@+id/am_im_refresh"
+        android:layout_toLeftOf="@+id/am_im_refresh"
+        android:layout_toStartOf="@+id/am_im_refresh"
+        android:layout_marginRight="8dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/am_im_refresh"
         android:layout_gravity="right"
         android:src="@mipmap/ic_refresh"
         android:background="@drawable/refresh_style"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="" />
+        android:contentDescription="@string/content_refresh"
+        android:layout_alignBottom="@+id/scrollView"
+        android:layout_alignRight="@+id/scrollView"
+        android:layout_alignEnd="@+id/scrollView" />
 </RelativeLayout>

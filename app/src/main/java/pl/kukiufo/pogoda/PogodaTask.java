@@ -34,16 +34,16 @@ import java.util.Locale;
 public class PogodaTask extends AsyncTask<Void, String, String> {
 
     Context context;
-    String city;
+    String city_name;
     String new_line;
     String location, date, condition, humidity, wind, pressure, visibility;
     String sunrise, sunset;
     String temperature, temperature_min, temperature_max;
     PogodaComponent pogoda;
 
-    public PogodaTask(Context context, PogodaComponent pogoda, String city) {
+    public PogodaTask(Context context, PogodaComponent pogoda, String city_name) {
         this.context = context;
-        this.city = city;
+        this.city_name = city_name;
         new_line = System.getProperty("line.separator");
         if(pogoda != null)
             this.pogoda = pogoda;
@@ -56,15 +56,17 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
 
     @Override
     protected String doInBackground(Void... arg0) {
-        HttpClient httpClient1 = new DefaultHttpClient();
-        HttpContext httpContext1 = new BasicHttpContext();
+        if(pogoda == null || city_name == null || city_name.isEmpty())
+            return null;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpContext httpContext = new BasicHttpContext();
         //HttpGet httpGet1 = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city + "%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
-        HttpGet httpGet1 = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city + "%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+        HttpGet httpGet = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city_name + "%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
         String jsonStr = null;
 
-        //https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22wejherowo%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys
         try {
-            HttpResponse response = httpClient1.execute(httpGet1, httpContext1);
+            HttpResponse response = httpClient.execute(httpGet, httpContext);
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {
@@ -109,7 +111,10 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
 
                 date = jsonForecast.get("date").toString();
                 location = jsonLocation.get("city").toString() + ", " + jsonLocation.get("country").toString();
-                condition = jsonCondition.get("text").toString();
+
+                String packageName = context.getPackageName();
+                int resId = context.getResources().getIdentifier("condition_" + jsonCondition.get("code").toString(), "string", packageName);
+                condition = context.getString(resId);
                 temperature = jsonCondition.get("temp").toString() + "°";
                 temperature_min = jsonForecast.get("low").toString() + "°";
                 temperature_max = jsonForecast.get("high").toString() + "°";
@@ -131,6 +136,9 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
     @Override
     @SuppressLint("SimpleDateFormat")
     protected void onPostExecute(String result) {
+        if(pogoda == null || result == null || result.isEmpty())
+            return;
+
         try {
             SimpleDateFormat dtParse = new SimpleDateFormat("dd MMM yyyy", Locale.US);
             SimpleDateFormat dtFormat = new SimpleDateFormat("dd MMMM yyyy");
@@ -147,10 +155,8 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
             e.printStackTrace();
         }
 
-        if(pogoda != null) {
-            pogoda.setBussyVisible(View.INVISIBLE);
-            pogoda.setPogoda(location, date, temperature, temperature_min, temperature_max,
-                            condition, humidity, wind, pressure, visibility, sunrise, sunset);
-        }
+        pogoda.setBussyVisible(View.INVISIBLE);
+        pogoda.setPogoda(location, date, temperature, temperature_min, temperature_max,
+                        condition, humidity, wind, pressure, visibility, sunrise, sunset);
     }
 }

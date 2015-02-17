@@ -7,6 +7,7 @@
 
     <color name="font_color">#ffffffff</color>
     <color name="refresh_color">#ff6f00a2</color>
+    <color name="settings_color">#ffffbb33</color>
     <color name="background_color">#ff44aeff</color>
 
 </resources>

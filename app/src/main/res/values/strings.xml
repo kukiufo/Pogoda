@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Pogoda</string>
 
+    <string name="content_refresh">odśwież</string>
+    <string name="content_settings">ustawienia</string>
+
+    <string name="city_name">podaj nazwę miasta</string>
+
+    <string name="btn_save">zapisz</string>
+    <string name="btn_cancel">anuluj</string>
+
     <string name="no_data">b/d</string>
     <string name="wind">wiatr:</string>
     <string name="humidity">wilgotność:</string>
@@ -8,5 +16,55 @@
     <string name="visibility">widoczność:</string>
     <string name="sunrise">wschód:</string>
     <string name="sunset">zachód:</string>
+
+    <string name="condition_0">tornado</string>
+    <string name="condition_1">tropikalny sztorm</string>
+    <string name="condition_2">huragan</string>
+    <string name="condition_3">silne burze</string>
+    <string name="condition_4">burze</string>
+    <string name="condition_5">deszcz ze śniegiem</string>
+    <string name="condition_6">deszcz i deszcz ze śniegiem</string>
+    <string name="condition_7">śnieg i deszcz ze śniegiem</string>
+    <string name="condition_8">marznąca mżawka</string>
+    <string name="condition_9">mżawka</string>
+    <string name="condition_10">marznący deszcz</string>
+    <string name="condition_11">opady</string>
+    <string name="condition_12">opady</string>
+    <string name="condition_13">przelotne opady śniegu</string>
+    <string name="condition_14">opady śniegu</string>
+    <string name="condition_15">zamiecie śnieżne</string>
+    <string name="condition_16">śnieg</string>
+    <string name="condition_17">grad</string>
+    <string name="condition_18">deszcz ze śniegiem</string>
+    <string name="condition_19">pył</string>
+    <string name="condition_20">mgła</string>
+    <string name="condition_21">mgiełka</string>
+    <string name="condition_22">zadymienie</string>
+    <string name="condition_23">burzowo</string>
+    <string name="condition_24">wietrznnie</string>
+    <string name="condition_25">zimno</string>
+    <string name="condition_26">zachmurzenie</string>
+    <string name="condition_27">duże zachmurzenie (noc)</string>
+    <string name="condition_28">duże zachmurzenie (dzień)</string>
+    <string name="condition_29">częściowe zachmurzenie (noc)</string>
+    <string name="condition_30">częściowe zachmurzenie (dzień)</string>
+    <string name="condition_31">przejżyście (w nocy)</string>
+    <string name="condition_32">słonecznie</string>
+    <string name="condition_33">pogodnie (w nocy)</string>
+    <string name="condition_34">pogodnie (dzień)</string>
+    <string name="condition_35">deszcz i grad</string>
+    <string name="condition_36">gorąco</string>
+    <string name="condition_37">pojedyncze burze</string>
+    <string name="condition_38">rozrzucone burze</string>
+    <string name="condition_39">rozrzucone burze</string>
+    <string name="condition_40">przelotne opady</string>
+    <string name="condition_41">śnieżyce</string>
+    <string name="condition_42">przelotne opady śniegu</string>
+    <string name="condition_43">śnieżyce</string>
+    <string name="condition_44">przelotne opady deszczu</string>
+    <string name="condition_45">burze</string>
+    <string name="condition_46">opady śniegu</string>
+    <string name="condition_47">sporadyczne burze</string>
+    <string name="condition_3200">brak danych</string>
 
 </resources>
