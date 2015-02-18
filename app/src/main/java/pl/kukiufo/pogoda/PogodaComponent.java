@@ -65,7 +65,7 @@ public class PogodaComponent extends LinearLayout {
         tv_sunset.setText(sunset);
     }
 
-    public void setPogodaClear() {
+    public void setPogodaNoData() {
         tv_location.setText(getContext().getText(R.string.no_data));
         tv_date.setText(getContext().getText(R.string.no_data));
         tv_temperature.setText(getContext().getText(R.string.no_data));

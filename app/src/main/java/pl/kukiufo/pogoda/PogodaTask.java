@@ -191,6 +191,6 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
             }
 
         }
-        pogoda.setPogodaClear();
+        pogoda.setPogodaNoData();
     }
 }
