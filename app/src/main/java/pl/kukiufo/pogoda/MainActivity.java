@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by kukiufo on 16.02.15.
@@ -81,5 +82,22 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         alertDialog.show();
+    }
+
+    private Toast toast;
+    private long lastBackPressTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        if (this.lastBackPressTime < System.currentTimeMillis() - 4000) {
+            toast = Toast.makeText(this, getString(R.string.toast_app_exit), Toast.LENGTH_SHORT);
+            toast.show();
+            this.lastBackPressTime = System.currentTimeMillis();
+        } else {
+            if (toast != null)
+                toast.cancel();
+
+            super.onBackPressed();
+        }
     }
 }
