@@ -57,14 +57,21 @@ public class MainActivity extends ActionBarActivity {
     private void showCityNameDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-        View city_layout = inflater.inflate(R.layout.city_layout, null);
-        alertDialog.setView(city_layout);
-        final EditText tv_city_name= (EditText) city_layout.findViewById(R.id.tv_city_name);
-        tv_city_name.setText(city_name);
+        View settings_layout = inflater.inflate(R.layout.settings_layout, null);
+        alertDialog.setView(settings_layout);
+        final EditText et_settings_city_name= (EditText) settings_layout.findViewById(R.id.et_settings_city_name);
+        et_settings_city_name.setText(city_name);
         alertDialog.setPositiveButton(getString(R.string.btn_save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
-                city_name = tv_city_name.getText().toString();
+                city_name = et_settings_city_name.getText().toString();
+
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, DEFAULT_KEYS_DISABLE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("city_name", city_name);
+                editor.apply();
+
                 dialog.cancel();
+
                 pogodaRefresh();
             }
         });
@@ -74,15 +81,5 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         alertDialog.show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, DEFAULT_KEYS_DISABLE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("city_name", city_name);
-        editor.apply();
     }
 }

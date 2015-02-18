@@ -64,4 +64,19 @@ public class PogodaComponent extends LinearLayout {
         tv_sunrise.setText(sunrise);
         tv_sunset.setText(sunset);
     }
+
+    public void setPogodaClear() {
+        tv_location.setText(getContext().getText(R.string.no_data));
+        tv_date.setText(getContext().getText(R.string.no_data));
+        tv_temperature.setText(getContext().getText(R.string.no_data));
+        tv_temperature_min.setText(getContext().getText(R.string.no_data));
+        tv_temperature_max.setText(getContext().getText(R.string.no_data));
+        tv_condition.setText(getContext().getText(R.string.no_data));
+        tv_humidity.setText(getContext().getText(R.string.no_data));
+        tv_wind.setText(getContext().getText(R.string.no_data));
+        tv_pressure.setText(getContext().getText(R.string.no_data));
+        tv_visibility.setText(getContext().getText(R.string.no_data));
+        tv_sunrise.setText(getContext().getText(R.string.no_data));
+        tv_sunset.setText(getContext().getText(R.string.no_data));
+    }
 }

@@ -6,17 +6,19 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:text="@string/city_name"
+        android:layout_height="48dp"
+        android:text="@string/error"
         android:gravity="center"
         android:textSize="25sp"
-        android:background="@color/settings_color"/>
+        android:background="@color/error_color"
+        android:textColor="@color/font_color" />
 
-    <EditText
-        android:id="@+id/tv_city_name"
-        android:inputType="text"
+    <TextView
+        android:text="@string/no_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/tv_error_details"
+        android:textSize="20sp"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"

@@ -4,10 +4,15 @@
     <string name="content_refresh">odśwież</string>
     <string name="content_settings">ustawienia</string>
 
-    <string name="city_name">podaj nazwę miasta</string>
+    <string name="settings_city_name">podaj nazwę miasta</string>
 
     <string name="btn_save">zapisz</string>
     <string name="btn_cancel">anuluj</string>
+    <string name="btn_close">zamknij</string>
+
+    <string name="error">Błąd !</string>
+    <string name="error_data">Błędna nazwa miasta.</string>
+    <string name="error_network">Brak połączenia z internetem.</string>
 
     <string name="no_data">b/d</string>
     <string name="wind">wiatr:</string>
