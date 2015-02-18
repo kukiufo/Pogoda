@@ -118,9 +118,11 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
                     JSONObject jsonItem = jsonChannel.getJSONObject("item");
                     JSONObject jsonCondition = jsonItem.getJSONObject("condition");
 
+                    //wyciągnij listę prognoz na najbliższe dni
                     JSONArray jsonForecasts = jsonItem.getJSONArray("forecast");
+                    //wyciągnij aktualną prognozę
                     JSONObject jsonForecast = jsonForecasts.getJSONObject(0);
-
+                    //pobierz datę aktualnej prognozy
                     date = jsonForecast.get("date").toString();
                     location = jsonLocation.get("city").toString() + ", " + jsonLocation.get("country").toString();
 
