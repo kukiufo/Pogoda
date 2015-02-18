@@ -48,13 +48,13 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
         this.context = context;
         this.city_name = city_name;
         new_line = System.getProperty("line.separator");
-        if(pogoda != null)
-            this.pogoda = pogoda;
+        this.pogoda = pogoda;
     }
 
     @Override
     protected void onPreExecute() {
-        pogoda.setBussyVisible(View.VISIBLE);
+        if(pogoda != null)
+            pogoda.setBussyVisible(View.VISIBLE);
     }
 
     @Override
