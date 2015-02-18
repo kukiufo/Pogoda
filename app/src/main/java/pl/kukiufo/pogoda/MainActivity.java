@@ -16,6 +16,7 @@ import android.widget.Toast;
  */
 public class MainActivity extends ActionBarActivity {
 
+    //nazwa pod którą szukane są dane z poprzedniej sesji
     public static final String PREFS_NAME = "pogoda_prefs";
     private PogodaComponent pc;
     private String city_name;
@@ -25,11 +26,13 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //wczytaj nazwę miasta zapisaną w poprzedniej sesji
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, DEFAULT_KEYS_DISABLE);
         city_name = settings.getString("city_name", "");
 
         pc = (PogodaComponent) findViewById(R.id.am_pogoda_component);
 
+        //inicjalizacja obsługi przycisku odświeżania pogody
         findViewById(R.id.am_im_refresh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //inicjalizacja obsługi przycisku ustawień
         findViewById(R.id.am_im_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,16 +48,24 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //jeśli brak nazwy miasta wyświetl okno konfiguracji
         if(city_name == null || city_name.isEmpty())
             showCityNameDialog();
         else
+            //wczytaj pogodę
             pogodaRefresh();
     }
 
+    /**
+     * F-cja wczytuje pogodę
+     */
     private void pogodaRefresh() {
         new PogodaTask(this, pc, city_name).execute();
     }
 
+    /**
+     * F-cja wyświetla okno konfiguracji
+     */
     @SuppressLint("InflateParams")
     private void showCityNameDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
@@ -66,6 +78,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog,int which) {
                 city_name = et_settings_city_name.getText().toString();
 
+                //zapisz nazwę miasta
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, DEFAULT_KEYS_DISABLE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("city_name", city_name);
@@ -87,13 +100,18 @@ public class MainActivity extends ActionBarActivity {
     private Toast toast;
     private long lastBackPressTime = 0;
 
+    /**
+     * F-cja obsługuje zamknięcie aplikacji po dwukrotnym kliknięciu przycisku back
+     */
     @Override
     public void onBackPressed() {
+        //wyświetl komunikat
         if (this.lastBackPressTime < System.currentTimeMillis() - 4000) {
             toast = Toast.makeText(this, getString(R.string.toast_app_exit), Toast.LENGTH_SHORT);
             toast.show();
             this.lastBackPressTime = System.currentTimeMillis();
         } else {
+            //wyłącz powiadomienie i zamknij aplikację
             if (toast != null)
                 toast.cancel();
 

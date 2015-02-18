@@ -58,6 +58,11 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
             pogoda.setBussyVisible(View.VISIBLE);
     }
 
+    /**
+     * F-cja łączy się z serwisem pogodowym yahoo, parsuje wynik
+     * @param arg0
+     * @return
+     */
     @Override
     protected String doInBackground(Void... arg0) {
         if(pogoda == null || city_name == null || city_name.isEmpty())
@@ -155,6 +160,10 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
         return "error_data";
     }
 
+    /**
+     * F-cja po zakończeniu wczytywania danych z serwisu wyświetla dane nt pogody lub okno z błędem
+     * @param result
+     */
     @Override
     @SuppressLint("SimpleDateFormat")
     protected void onPostExecute(String result) {

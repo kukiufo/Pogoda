@@ -28,6 +28,9 @@ public class PogodaComponent extends LinearLayout {
         setupViewItems();
     }
 
+    /**
+     * F-cja inicjuje kontrolki komponentu
+     */
     private void setupViewItems() {
         pb_bussy = (ProgressBar) findViewById(R.id.pb_bussy);
         tv_location = (TextView) findViewById(R.id.tv_location);
@@ -44,10 +47,29 @@ public class PogodaComponent extends LinearLayout {
         tv_sunset = (TextView) findViewById(R.id.tv_sunset);
     }
 
+    /**
+     * F-cja ukrywa/pokazuje progressbar informujący o pracy w tle
+     * @param visible
+     */
     public void setBussyVisible(int visible) {
         pb_bussy.setVisibility(visible);
     }
 
+    /**
+     * F-cja wyświetla informacje nt pogody
+     * @param location
+     * @param date
+     * @param temperature
+     * @param temperature_min
+     * @param temperature_max
+     * @param condition
+     * @param humidity
+     * @param wind
+     * @param pressure
+     * @param visibility
+     * @param sunrise
+     * @param sunset
+     */
     public void setPogoda(String location, String date, String temperature, String temperature_min, String temperature_max,
                           String condition, String humidity, String wind, String pressure, String visibility,
                           String sunrise, String sunset) {
@@ -65,18 +87,21 @@ public class PogodaComponent extends LinearLayout {
         tv_sunset.setText(sunset);
     }
 
+    /**
+     * F-cja wyświetla domyślne wartości dla stanu pogody 'brak danych - b/d'
+     */
     public void setPogodaNoData() {
-        tv_location.setText(getContext().getText(R.string.no_data));
-        tv_date.setText(getContext().getText(R.string.no_data));
-        tv_temperature.setText(getContext().getText(R.string.no_data));
-        tv_temperature_min.setText(getContext().getText(R.string.no_data));
-        tv_temperature_max.setText(getContext().getText(R.string.no_data));
-        tv_condition.setText(getContext().getText(R.string.no_data));
-        tv_humidity.setText(getContext().getText(R.string.no_data));
-        tv_wind.setText(getContext().getText(R.string.no_data));
-        tv_pressure.setText(getContext().getText(R.string.no_data));
-        tv_visibility.setText(getContext().getText(R.string.no_data));
-        tv_sunrise.setText(getContext().getText(R.string.no_data));
-        tv_sunset.setText(getContext().getText(R.string.no_data));
+        setPogoda(getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString(),
+        getContext().getText(R.string.no_data).toString());
     }
 }
