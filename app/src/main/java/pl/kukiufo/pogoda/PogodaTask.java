@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext httpContext = new BasicHttpContext();
 
+        //podstaw podaną nazwe miasta do url
         HttpGet httpGet = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city_name + "%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
         String jsonStr = null;
 
@@ -72,6 +74,7 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
             HttpResponse response = httpClient.execute(httpGet, httpContext);
             HttpEntity entity = response.getEntity();
 
+            //odczytaj dane z odpowiedzi
             if (entity != null) {
                 InputStream inputStream = entity.getContent();
                 Reader in = new InputStreamReader(inputStream);
@@ -96,6 +99,8 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
             try {
                 JSONObject jsonObj = new JSONObject(jsonStr);
                 JSONObject jsonQuery = jsonObj.getJSONObject("query");
+                //jeśli obiekt query zawiera szczegóły nt pogody dotyczące jednej lokalizacji
+                //przygotuj dane do wyświetlenia informacji nt pogody
                 if(jsonQuery.getInt("count") == 1) {
                     JSONObject jsonResults = jsonQuery.getJSONObject("results");
                     JSONObject jsonChannel = jsonResults.getJSONObject("channel");
@@ -114,9 +119,16 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
                     date = jsonForecast.get("date").toString();
                     location = jsonLocation.get("city").toString() + ", " + jsonLocation.get("country").toString();
 
-                    String packageName = context.getPackageName();
-                    int resId = context.getResources().getIdentifier("condition_" + jsonCondition.get("code").toString(), "string", packageName);
-                    condition = context.getString(resId);
+                    try {
+                        //przygotowanie id tłumaczenia nazwy stanu pogody na podstawie kodu
+                        String packageName = context.getPackageName();
+                        int resId = context.getResources().getIdentifier("condition_" + jsonCondition.get("code").toString(), "string", packageName);
+                        condition = context.getString(resId);
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                        //jeśli wystąpił błąd podstaw 'brak danych'
+                        condition = context.getString(R.string.condition_3200);
+                    }
                     temperature = jsonCondition.get("temp").toString() + "°";
                     temperature_min = jsonForecast.get("low").toString() + "°";
                     temperature_max = jsonForecast.get("high").toString() + "°";
@@ -129,6 +141,7 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
 
                     return "ok";
                 } else
+                    //zwróć błąd niejednoznacze dane
                     return "error_data";
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -153,12 +166,16 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
         if(result != null) {
             if (result.equals("ok")) {
                 try {
+                    //zmień format otrzymanej daty z np. 18 Feb 2015
                     SimpleDateFormat dtParse = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+                    //na datę w postaci np. 18 lutego 2015
                     SimpleDateFormat dtFormat = new SimpleDateFormat("dd MMMM yyyy");
                     Date dt = dtParse.parse(date);
                     date = dtFormat.format(dt);
 
+                    //zmień format czasu z np. 6:25 pm
                     dtParse = new SimpleDateFormat("hh:mm aa", Locale.US);
+                    //na czas w postaci 18:25
                     dtFormat = new SimpleDateFormat("H:mm");
                     dt = dtParse.parse(sunrise);
                     sunrise = dtFormat.format(dt);
@@ -172,12 +189,14 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
                         condition, humidity, wind, pressure, visibility, sunrise, sunset);
                 return;
             } else if(result.equals("error_network") || result.equals("error_data")) {
+                //jeśli wystąpił błąd podczas czytania informacji z serwisu wyświet okno i informacją nt błędu
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
                 View error_layout = inflater.inflate(R.layout.error_layout, null);
                 alertDialog.setView(error_layout);
                 final TextView tv_error_details= (TextView) error_layout.findViewById(R.id.tv_error_details);
 
+                //przygotowanie id tłumaczenia opisu błędu pogody na podstawie nazwy błędu
                 String packageName = context.getPackageName();
                 int resId = context.getResources().getIdentifier(result, "string", packageName);
                 tv_error_details.setText(context.getString(resId));
@@ -189,7 +208,6 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
                 });
                 alertDialog.show();
             }
-
         }
         pogoda.setPogodaNoData();
     }
