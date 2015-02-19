@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Pogoda</string>
 
+    <string name="powered_by">Yahoo! Weather</string>
+
     <string name="toast_app_exit">Naciśnij ponownie, aby zamknąć aplikację</string>
 
     <string name="content_refresh">odśwież</string>

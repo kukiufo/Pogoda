@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,8 +73,19 @@ public class PogodaTask extends AsyncTask<Void, String, String> {
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext httpContext = new BasicHttpContext();
 
+        //zakoduj podaną nazwę miasta
+        String url_city_name;
+        try {
+            url_city_name = URLEncoder.encode(city_name, "UTF-8");
+            url_city_name = url_city_name.replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "error_data";
+        }
         //podstaw podaną nazwe miasta do url
-        HttpGet httpGet = new HttpGet("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + city_name + "%2C%20ak%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+        String url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + url_city_name + "%22)%20and%20u%20%3D%20'c'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+        System.out.println("url: " + url);
+        HttpGet httpGet = new HttpGet(url);
         String jsonStr = null;
 
         try {
