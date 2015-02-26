@@ -9,9 +9,7 @@ import retrofit.http.GET;
  */
 public interface YService {
 
+    @SuppressWarnings("deprecation")
     @GET("/v1/public/yql{service_query}")
-    //YUnits units(@Path("url_city_name") String url_city_name);
-
-//    @GET("/v1/public/yql")
     YResponse getResponce(@EncodedPath("service_query") String service_query);
 }
