@@ -15,11 +15,11 @@
         android:layout_height="fill_parent"
         android:id="@+id/scrollView">
 
-        <pl.kukiufo.pogoda.PogodaComponent
+        <pl.kukiufo.pogoda.WeatherComponent
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/am_pogoda_component"
-            layout="@layout/pogoda_component"
+            android:id="@+id/am_weather_component"
+            layout="@layout/weather_component"
             android:layout_gravity="top" />
 
     </ScrollView>

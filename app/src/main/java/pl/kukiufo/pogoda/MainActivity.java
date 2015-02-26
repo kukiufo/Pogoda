@@ -17,8 +17,8 @@ import android.widget.Toast;
 public class MainActivity extends ActionBarActivity {
 
     //nazwa pod którą szukane są dane z poprzedniej sesji
-    public static final String PREFS_NAME = "pogoda_prefs";
-    private PogodaComponent pc;
+    public static final String PREFERENSES_NAME = "weather_preferences";
+    private WeatherComponent weatherComp;
     private String city_name;
 
     @Override
@@ -27,10 +27,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         //wczytaj nazwę miasta zapisaną w poprzedniej sesji
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, DEFAULT_KEYS_DISABLE);
+        SharedPreferences settings = getSharedPreferences(PREFERENSES_NAME, DEFAULT_KEYS_DISABLE);
         city_name = settings.getString("city_name", "");
 
-        pc = (PogodaComponent) findViewById(R.id.am_pogoda_component);
+        weatherComp = (WeatherComponent) findViewById(R.id.am_weather_component);
 
         //inicjalizacja obsługi przycisku odświeżania pogody
         findViewById(R.id.am_im_refresh).setOnClickListener(new View.OnClickListener() {
@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
      * F-cja wczytuje pogodę
      */
     private void pogodaRefresh() {
-        new PogodaTask(this, pc, city_name).execute();
+        new WeatherTask(this, weatherComp, city_name).execute();
     }
 
     /**
@@ -79,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
                 city_name = et_settings_city_name.getText().toString();
 
                 //zapisz nazwę miasta
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, DEFAULT_KEYS_DISABLE);
+                SharedPreferences settings = getSharedPreferences(PREFERENSES_NAME, DEFAULT_KEYS_DISABLE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("city_name", city_name);
                 editor.apply();
