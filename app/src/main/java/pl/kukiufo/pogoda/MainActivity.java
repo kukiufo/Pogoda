@@ -18,8 +18,8 @@ public class MainActivity extends ActionBarActivity {
 
     //nazwa pod którą szukane są dane z poprzedniej sesji
     public static final String PREFERENSES_NAME = "weather_preferences";
-    private WeatherComponent weatherComp;
-    private String city_name;
+    private WeatherComponent mWeatherComp;
+    private String mCityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +28,9 @@ public class MainActivity extends ActionBarActivity {
 
         //wczytaj nazwę miasta zapisaną w poprzedniej sesji
         SharedPreferences settings = getSharedPreferences(PREFERENSES_NAME, DEFAULT_KEYS_DISABLE);
-        city_name = settings.getString("city_name", "");
+        mCityName = settings.getString("city_name", "");
 
-        weatherComp = (WeatherComponent) findViewById(R.id.am_weather_component);
+        mWeatherComp = (WeatherComponent) findViewById(R.id.am_weather_component);
 
         //inicjalizacja obsługi przycisku odświeżania pogody
         findViewById(R.id.am_im_refresh).setOnClickListener(new View.OnClickListener() {
@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         //jeśli brak nazwy miasta wyświetl okno konfiguracji
-        if(city_name == null || city_name.isEmpty())
+        if(mCityName == null || mCityName.isEmpty())
             showCityNameDialog();
         else
             //wczytaj pogodę
@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
      * F-cja wczytuje pogodę
      */
     private void pogodaRefresh() {
-        new WeatherTask(this, weatherComp, city_name).execute();
+        new WeatherTask(this, mWeatherComp, mCityName).execute();
     }
 
     /**
@@ -73,15 +73,15 @@ public class MainActivity extends ActionBarActivity {
         View settings_layout = inflater.inflate(R.layout.settings_layout, null);
         alertDialog.setView(settings_layout);
         final EditText et_settings_city_name= (EditText) settings_layout.findViewById(R.id.et_settings_city_name);
-        et_settings_city_name.setText(city_name);
+        et_settings_city_name.setText(mCityName);
         alertDialog.setPositiveButton(getString(R.string.btn_save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
-                city_name = et_settings_city_name.getText().toString();
+                mCityName = et_settings_city_name.getText().toString();
 
                 //zapisz nazwę miasta
                 SharedPreferences settings = getSharedPreferences(PREFERENSES_NAME, DEFAULT_KEYS_DISABLE);
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("city_name", city_name);
+                editor.putString("city_name", mCityName);
                 editor.apply();
 
                 dialog.cancel();

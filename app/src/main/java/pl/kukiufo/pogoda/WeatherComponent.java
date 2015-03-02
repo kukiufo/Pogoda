@@ -21,7 +21,7 @@ import pl.kukiufo.pogoda.model.YResponse;
  */
 public class WeatherComponent extends LinearLayout {
 
-    private Context context;
+    private Context mContext;
     private ProgressBar pb_bussy;
     private TextView tv_location, tv_date, tv_condition, tv_humidity, tv_wind, tv_pressure, tv_visibility;
     private TextView tv_sunrise, tv_sunset;
@@ -29,7 +29,7 @@ public class WeatherComponent extends LinearLayout {
 
     public WeatherComponent(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
@@ -112,13 +112,13 @@ public class WeatherComponent extends LinearLayout {
                 String condition;
                 try {
                     //przygotowanie id tłumaczenia nazwy stanu pogody na podstawie kodu
-                    String packageName = context.getPackageName();
-                    int resId = context.getResources().getIdentifier("condition_" + yChannel.getItem().getCondition().getCode(), "string", packageName);
-                    condition = context.getString(resId);
+                    String packageName = mContext.getPackageName();
+                    int resId = mContext.getResources().getIdentifier("condition_" + yChannel.getItem().getCondition().getCode(), "string", packageName);
+                    condition = mContext.getString(resId);
                 } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
                     //jeśli wystąpił błąd podstaw 'brak danych'
-                    condition = context.getString(R.string.condition_3200);
+                    condition = mContext.getString(R.string.condition_3200);
                 }
 
                 tv_condition.setText(condition);
@@ -130,7 +130,7 @@ public class WeatherComponent extends LinearLayout {
                 tv_sunset.setText(sunset);
             } catch (Exception e) {
                 e.printStackTrace();
-                //jeśli wystąpił błąd parsowania dat ustaw brak danych
+                //jeśli wystąpił błąd parsowania ustaw brak danych
                 e.printStackTrace();
                 setPogodaNoData();
             }
